@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: aaf5ebd38284cb34dac17da92bc67cdf
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - timeTxt: {instanceID: 0}
+  - card: {instanceID: 0}
+  - firstCard: {instanceID: 0}
+  - secondCard: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
