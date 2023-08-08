@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 internal enum CardType
 {
@@ -12,18 +13,20 @@ public class Card : MonoBehaviour
 {
     public Animator anim;
     public GameObject border;
+    public Text desc;
 
     public static string FRONT = "front";
     public static string BACK = "back";
+    public static string DESC = "Desc";
     public static string CARD_PATH = "rtan";
     private static string BORDER = "Border";
 
 
     private bool isOpen = false;
-    private CardType type = CardType.Image;
+    internal CardType cardType { get; private set; } = CardType.Image; 
 
     public string member = "";
-    public string imgType;
+    public string imgType = "";
     
     // Start is called before the first frame update
     void Start()
@@ -35,6 +38,36 @@ public class Card : MonoBehaviour
     void Update()
     {
         
+    }
+
+    internal void SetCardType(CardType cardType)
+    {
+        this.cardType = cardType;
+        transform.Find(FRONT).gameObject.SetActive(false);
+        transform.Find(BACK).gameObject.SetActive(false);
+        transform.Find(DESC).gameObject.SetActive(true);
+    }
+
+    public void SetMember(string member)
+    {
+        this.member = member;
+    }
+
+    public void SetDescriptions(string[] descs)
+    {
+        string text = member+"\n";
+        foreach(string desc in descs)
+        {
+            text += desc+"\n";
+        }
+        
+        desc.text = text;
+        Debug.Log($"text:{text}");
+    }
+
+    public void UnSelectCard()
+    {
+        border.SetActive(false);
     }
 
     public void ClickCard()
@@ -49,13 +82,18 @@ public class Card : MonoBehaviour
         var isClicked = border.activeSelf;
         border.SetActive(!isClicked);
 
-        if(type == CardType.Desc)
+        //on Description clicked
+        if (cardType == CardType.Desc)
         {
-            //todo card selected to desc
-            CardManager.Instance.SelectMember(member);
+            Debug.Log("설명 카드 클릭");
+            if (CardManager.Instance.IsSelectedMemberSameAs(this))
+            {
+                Debug.Log("같은 설명 카드 클릭");
+            }
+            
             return;
         }
-        
+
         CardManager.Instance.SelectCard(this);
         /* todo
          * 1. 카드 열었을 경우 선택된 카드가 있는지 ...??

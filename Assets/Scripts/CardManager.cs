@@ -18,12 +18,19 @@ public class CardManager : MonoBehaviour
     private int[] indices;
 
     private static string[] MemberNames = { "이장원","김대열","임지연","최하나" };
+    private static string[][] MemberDescs = {
+        new string[] { "고양이❤️", "STPB" ,"보디빌딩"},
+        new string[] { "고양이❤️", "STPB","요리" },
+        new string[] { "수달❤️", "ISFP" ,"그림"},
+        new string[] { "강아지❤️", "ISFP","독서" }
+    };
 
     private string selectedMember = null;
 
+    private Card memberCard = null;
     private Card firstCard = null;
     private Card secondCard = null;
-
+    
     private bool isAnimationStarted = false;
 
     private void Awake()
@@ -50,10 +57,20 @@ public class CardManager : MonoBehaviour
 
 	private void InitCard()
 	{
-        //TODO : 설명카드 배열작업 
-
         //load resources
         resources = Resources.LoadAll<Sprite>(Card.CARD_PATH);
+
+        //TODO : 설명카드 배열작업 
+        for(var i = 0; i < MemberNames.Length; i++)
+        {
+            var position = new Vector3(START_POSITION_X + i *INTERVAL, 2f,0f);
+            var descCard = Instantiate(card, position, Quaternion.identity);
+            var desc = MemberDescs[i];
+            var descCardBehavior = descCard.GetComponent<Card>();
+            descCardBehavior.SetCardType(CardType.Desc);
+            descCardBehavior.SetMember(MemberNames[i]);
+            descCardBehavior.SetDescriptions(MemberDescs[i]);
+        }
 
         //shuffle indices
         var listOfIndex = new List<int>();
@@ -72,14 +89,35 @@ public class CardManager : MonoBehaviour
 			
             var position = new Vector3(START_POSITION_X + col * INTERVAL, START_POSITION_Y + row * INTERVAL , 0f);
             var cardGameObj = Instantiate(card, position, Quaternion.identity);
-			Debug.Log($"cardObj is {cardGameObj}");
-            Debug.Log($"spriteRenderer is {cardGameObj.transform.Find(Card.FRONT).GetComponent<SpriteRenderer>()}");
-            Debug.Log($"resources are {resources}");
             Debug.Log($"resource is {resources[indices[i]]}");
             cardGameObj.transform.Find(Card.FRONT).GetComponent<SpriteRenderer>().sprite = resources[indices[i]];
             
         }
 	}
+
+
+    /// <summary>
+    ///   <para>멤버카드를 선택합니다.</para>
+    /// </summary>
+    /// <param name="card">선택한 멤버카드</param>
+    /// <returns>
+    ///   <para>동작 이후에 카드가 선택된 상태인지를 반환한다.</para>
+    /// </returns>
+    public void SelectMemberCard(Card card)
+    {
+        if (memberCard == card) {
+            card.ClickCard();
+            memberCard = null;
+        }else
+        {
+            memberCard = card;
+        }
+    }
+
+    public bool IsSelectedMemberSameAs(Card card)
+    {
+        return memberCard == card;
+    }
 
     public void SelectCard(Card card)
     {
@@ -92,6 +130,7 @@ public class CardManager : MonoBehaviour
             isAnimationStarted = true;
             secondCard = card;
             secondCard.AnimateOpen();
+
             // TODO : matchManger 와 통신
             Invoke(CLOSE_CARDS, 1f);
         }else
