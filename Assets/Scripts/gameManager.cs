@@ -52,30 +52,4 @@ public class gameManager : MonoBehaviour
         }
     }
 
-    public void isMatched()
-    {
-        string firstCardImage = firstCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite.name;
-        string secondCardImage = secondCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite.name;
-
-        if (firstCardImage == secondCardImage)
-        {
-            firstCard.GetComponent<Card>().destroyCard();
-            secondCard.GetComponent<Card>().destroyCard();
-
-            int cardsLeft = GameObject.Find("cards").transform.childCount;
-            if (cardsLeft == 2)
-            {
-                endTxt.SetActive(true);
-                Time.timeScale = 0.0f;
-            }
-        }
-        else
-        {
-            firstCard.GetComponent<Card>().closeCard();
-            secondCard.GetComponent<Card>().closeCard();
-        }
-
-        firstCard = null;
-        secondCard = null;
-    }
 }
