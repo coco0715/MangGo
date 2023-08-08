@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class gameManager : MonoBehaviour
 {
     public Text timeTxt;
-    float time = 60.0f;
+    float time = 30.0f;
     public GameObject card;
     public static gameManager I;
     public GameObject secondCard;
@@ -25,6 +26,9 @@ public class gameManager : MonoBehaviour
         int[] rtans = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7 };
 
         rtans = rtans.OrderBy(item => Random.Range(-1.0f, 1.0f)).ToArray();
+
+        Time.timeScale = 1.0f;
+        InvokeRepeating("makeSquare", 0.0f, 0.5f);
 
         for (int i = 0; i < 16; i++)
         {
@@ -45,10 +49,12 @@ public class gameManager : MonoBehaviour
     {
         time -= Time.deltaTime;
         timeTxt.text = time.ToString("N2");
-        if(time <= 0)
+
+        if (time < 0.0f)
         {
             time = 0;
             endTxt.SetActive(true);
+            Time.timeScale = 0.0f;
         }
     }
 
