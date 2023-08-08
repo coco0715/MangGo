@@ -905,9 +905,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -7727562669877338029}
+      - m_Target: {fileID: 11500000, guid: f1ef9467998196a40af268672dd4b6b5, type: 3}
         m_TargetAssemblyTypeName: Card, Assembly-CSharp
-        m_MethodName: ClickCard
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

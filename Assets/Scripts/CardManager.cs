@@ -67,6 +67,7 @@ public class CardManager : MonoBehaviour
             var descCard = Instantiate(card, position, Quaternion.identity);
             var desc = MemberDescs[i];
             var descCardBehavior = descCard.GetComponent<Card>();
+            //desc
             descCardBehavior.SetCardType(CardType.Desc);
             descCardBehavior.SetMember(MemberNames[i]);
             descCardBehavior.SetDescriptions(MemberDescs[i]);
