@@ -58,10 +58,7 @@ public class gameManager : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        I = this;
-    }
+  
 
     public void isMatched()
     {
