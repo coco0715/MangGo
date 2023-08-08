@@ -7,12 +7,17 @@ using System.Linq;
 public class gameManager : MonoBehaviour
 {
     public Text timeTxt;
-    float time = 0.0f;
+    float time = 60.0f;
     public GameObject card;
     public static gameManager I;
     public GameObject secondCard;
     public GameObject endTxt;
     public GameObject firstCard;
+
+    private void Awake()
+    {
+        I = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -38,8 +43,13 @@ public class gameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
+        time -= Time.deltaTime;
         timeTxt.text = time.ToString("N2");
+        if(time <= 0)
+        {
+            time = 0;
+            endTxt.SetActive(true);
+        }
     }
 
     public void isMatched()
@@ -49,8 +59,8 @@ public class gameManager : MonoBehaviour
 
         if (firstCardImage == secondCardImage)
         {
-            firstCard.GetComponent<card>().destroyCard();
-            secondCard.GetComponent<card>().destroyCard();
+            firstCard.GetComponent<Card>().destroyCard();
+            secondCard.GetComponent<Card>().destroyCard();
 
             int cardsLeft = GameObject.Find("cards").transform.childCount;
             if (cardsLeft == 2)
@@ -61,8 +71,8 @@ public class gameManager : MonoBehaviour
         }
         else
         {
-            firstCard.GetComponent<card>().closeCard();
-            secondCard.GetComponent<card>().closeCard();
+            firstCard.GetComponent<Card>().closeCard();
+            secondCard.GetComponent<Card>().closeCard();
         }
 
         firstCard = null;
