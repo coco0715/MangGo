@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MatchManager : MonoBehaviour
+public class MatchManager
 {
     // TODO 지울예정
     public class Cards
@@ -10,6 +10,9 @@ public class MatchManager : MonoBehaviour
         public string member;
         public string imgType;
     }
+    public int highestScore = 200;
+    public int score = 0;
+    
     private bool successMatch; // 매칭 성공여부를 저장하는 변수
 
     public bool GetSuccessMatch()

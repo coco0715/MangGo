@@ -13,8 +13,8 @@ public class UI_Popup : UI_Base
         RectTransform myRectTransform = this.gameObject.GetComponent<RectTransform>();
         myRectTransform = transform as RectTransform;
         //myRectTransform.SetAnchor(AnchorPresets.StretchAll);
-        myRectTransform.offsetMin = new Vector2(0, 0);
-        myRectTransform.offsetMax = new Vector2(-0,-0);
+        //myRectTransform.offsetMin = new Vector2(0, 0);
+        //myRectTransform.offsetMax = new Vector2(-0,-0);
 
         return true;
     }
