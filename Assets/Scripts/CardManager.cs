@@ -25,9 +25,9 @@ public class CardManager : MonoBehaviour
 
     private static readonly string[][] MemberDescs =
     {
-        new string[] { "ENFP️", "게임", "지지말자!" },
-        new string[] { "ENTP", "보디빌딩", "힘내자!" },
         new string[] { "INTP", "게임", "취업하자!" },
+        new string[] { "ENTP", "보디빌딩", "힘내자!" },
+        new string[] { "ENFP️", "게임", "지지말자!" },
         new string[] { "INFJ️", "낮잠자기", "운전하기" },
     };
 
@@ -156,23 +156,31 @@ public class CardManager : MonoBehaviour
 
             //만약 같으면 카드 파괴
             var result = Managers.Match.CheckMatch(_memberCard, _firstCard, _secondCard);
-
+            Debug.Log($"1Card.member is {_firstCard.member} & 2Card.member is {_secondCard.member}");
+            Debug.Log($"1Card.member is {_firstCard.imgType} & 2Card.member is {_secondCard.imgType}");
             switch (result)
             {
-                case 0: // intentionally skip
-                case 1:
+                case 0:
+                    //TODO 점수 득점
                     Debug.Log("matchSuccess");
                     _firstCard.Fadeout();
                     _secondCard.Fadeout();
                     Invoke(MethodDestroyCards, 0.5f);
-                    Debug.Log("그림 맞음");
+                    Debug.Log("매칭 성공!");
+                    break;
+                case 1:
+                    //TODO 점수 -1 감점하기
+                    Invoke(MethodCloseCards, 0.5f);
+                    Debug.Log("그림 O, 멤버 X");
                     break;
                 case 2:
-                    Debug.Log("멤버와 다름");
+                    //TODO 점수 -2 감점하기
+                    Debug.Log("그림 X, 멤버 O");
                     Invoke(MethodCloseCards, 0.5f);
                     break;
                 case 3:
-                    Debug.Log("싹 다 다름");
+                    //TODO 점수 -3 감점하기
+                    Debug.Log("그림 X, 멤버 X");
                     Invoke(MethodCloseCards, 0.5f);
                     break;
 

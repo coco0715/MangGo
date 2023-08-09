@@ -15,7 +15,7 @@ public class UI_Main : UI_Scene
         Init();
     }
 
-    void Update()
+    /*void Update()
     {
         time -= Time.deltaTime;
         GetText((int)Texts.timeText).text = time.ToString("N2");
@@ -26,7 +26,7 @@ public class UI_Main : UI_Scene
             Managers.UI.ShowPopupUI<UI_Result>();
             Time.timeScale = 0.0f;
         }
-    }
+    }*/
 
     public override bool Init()
     {

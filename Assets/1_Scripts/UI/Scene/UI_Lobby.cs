@@ -37,6 +37,7 @@ public class UI_Lobby : UI_Scene
             Managers.Match.score = 400;
             Managers.UI.ShowPopupUI<UI_Result>();
         });
+        
         GetText((int)Texts.FirstScoreText).text = "120";
         GetText((int)Texts.SecondScoreText).text = "100";
         GetText((int)Texts.ThirdScoreText).text = "90";
