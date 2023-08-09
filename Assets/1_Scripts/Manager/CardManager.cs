@@ -154,31 +154,40 @@ public class CardManager : MonoBehaviour
             switch (result)
             {
                 case 0:
-                    //TODO 점수 득점
+                    Managers.User.AddScore();
+                    Managers.User.isContinuous = true;
                     Debug.Log("matchSuccess");
                     _firstCard.Fadeout();
                     _secondCard.Fadeout();
                     Invoke(MethodDestroyCards, 0.5f);
                     Debug.Log("매칭 성공!");
                     mainUI.ShowCheckText(memberCard.member);
+                    mainUI.UpdateScoreText();
+                    mainUI.time += 5f;
                     break;
                 case 1:
-                    //TODO 점수 -1 감점하기
+                    Managers.User.isContinuous = false;
+                    Managers.User.LoseScore(1);
                     Invoke(MethodCloseCards, 0.5f);
                     Debug.Log("그림 O, 멤버 X");
                     mainUI.ShowCheckText("실패");
+                    mainUI.UpdateScoreText();
                     break;
                 case 2:
-                    //TODO 점수 -2 감점하기
+                    Managers.User.isContinuous = false;
+                    Managers.User.LoseScore(2);
                     Debug.Log("그림 X, 멤버 O");
                     Invoke(MethodCloseCards, 0.5f);
                     mainUI.ShowCheckText("실패");
+                    mainUI.UpdateScoreText();
                     break;
                 case 3:
-                    //TODO 점수 -3 감점하기
+                    Managers.User.isContinuous = false;
+                    Managers.User.LoseScore(3);
                     Debug.Log("그림 X, 멤버 X");
                     Invoke(MethodCloseCards, 0.5f);
                     mainUI.ShowCheckText("실패");
+                    mainUI.UpdateScoreText();
                     break;
 
                 default: throw new InvalidDataException("결과값은 반드시 0,1,2,3 중 하나여야만 한다.");

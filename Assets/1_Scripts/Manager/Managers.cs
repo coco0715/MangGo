@@ -18,6 +18,7 @@ public class Managers : MonoBehaviour
     private static SoundManager s_soundManager = new SoundManager();
     private static MatchManager s_matchManager = new MatchManager();
     private static CardManager s_cardManager = new CardManager();
+    private static UserManager s_userManager = new UserManager();
 
     public static GameManager GameMng {get{return s_gameManager;}}
     public static ResourceManager Resource { get { Init(); return s_resourceManager; } }
@@ -26,6 +27,7 @@ public class Managers : MonoBehaviour
     public static SoundManager Sound { get { Init(); return s_soundManager; } }
     public static MatchManager Match {get {Init(); return s_matchManager;}}
     public static CardManager CardMng {get { return s_cardManager;}}
+    public static UserManager User { get { return s_userManager; } }
 
     private void Start()
     {

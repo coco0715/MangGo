@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UserManager : MonoBehaviour
+public class UserManager
 {
     public int score = 0;
     public bool isContinuous = false;
@@ -15,6 +15,10 @@ public class UserManager : MonoBehaviour
     public void LoseScore(int losing)
     {
         score -= losing;
+        if(score <= 0) 
+        {
+            score = 0;
+        }
     }
 
     public void AddScore()

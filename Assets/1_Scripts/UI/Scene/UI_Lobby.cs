@@ -29,7 +29,6 @@ public class UI_Lobby : UI_Scene
 
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
-
         
         GetButton((int)Buttons.StartButton).gameObject.BindEvent(() => Managers.Scene.ChangeScene(Define.Scene.MainScene));
         GetButton((int)Buttons.EndButton).gameObject.BindEvent(() => {

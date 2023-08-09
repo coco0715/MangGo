@@ -60,7 +60,7 @@ public class UI_Result : UI_Popup
         // TODO UserManger.user.highestScore로 수정해야 함
         int highestScore = Managers.Match.highestScore;
         // TODO UserManager.user.score로 수정해야 함
-        int score =  Managers.Match.score;
+        int score =  Managers.User.score;
         bool isHighest = false;
 
         if(score > highestScore)

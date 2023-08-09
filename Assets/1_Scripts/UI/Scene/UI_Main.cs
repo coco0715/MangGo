@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class UI_Main : UI_Scene
 {
-    float time = 30.0f;
+    public float time = 30.0f;
     enum Texts
     {
         timeText,
+        scoreText,
         CheckText,
     }
 
@@ -37,12 +38,18 @@ public class UI_Main : UI_Scene
         BindText(typeof(Texts));
 
         GetText((int)Texts.CheckText).gameObject.SetActive(false);
+        GetText((int)Texts.scoreText).text = Managers.User.score.ToString();
 
        // Sound
        Managers.Sound.Clear();
         //Managers.Sound.Play("LobbyBgm", Define.Sound.Bgm);
 
         return true;
+    }
+
+    public void UpdateScoreText()
+    {
+        GetText((int)Texts.scoreText).text = Managers.User.score.ToString();
     }
 
     public void ShowCheckText(string content)
