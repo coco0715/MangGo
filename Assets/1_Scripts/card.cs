@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+//using TMPro;
 
 internal enum CardType
 {
@@ -18,7 +19,7 @@ public class Card : MonoBehaviour
     public static string FRONT = "front";
     public static string BACK = "back";
     public static string DESC = "Desc";
-    public static string CARD_PATH = "rtan";
+    public static string CARD_PATH = "Sprites/rtan";
     private static string BORDER = "Border";
 
 
@@ -28,16 +29,9 @@ public class Card : MonoBehaviour
     public string member = "";
     public string imgType = "";
     
-    // Start is called before the first frame update
-    void Start()
+    public void SetDesc()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        //desc = desc.gameObject.GetComponent<TextMeshProUGUI>();
     }
 
     internal void SetCardType(CardType cardType)
@@ -73,7 +67,7 @@ public class Card : MonoBehaviour
     public void ClickCard()
     {
         //animation 중에는 선택 불가능 하도록 ... firstCard, secondCard 의 참조가 꼬여서 잘못된 객체가 조작됨 
-        if (CardManager.Instance.IsAnimationStarted())
+        if (Managers.CardMng.IsAnimationStarted())
         {
             return;
         }
@@ -86,7 +80,7 @@ public class Card : MonoBehaviour
         if (cardType == CardType.Desc)
         {
             Debug.Log("설명 카드 클릭");
-            if (CardManager.Instance.IsSelectedMemberSameAs(this))
+            if (Managers.CardMng.IsSelectedMemberSameAs(this))
             {
                 Debug.Log("같은 설명 카드 클릭");
             }
@@ -94,7 +88,7 @@ public class Card : MonoBehaviour
             return;
         }
 
-        CardManager.Instance.SelectCard(this);
+        Managers.CardMng.SelectCard(this);
         /* todo
          * 1. 카드 열었을 경우 선택된 카드가 있는지 ...??
          * 2. 카드 선택된 카드와 비교는 내가 안함 

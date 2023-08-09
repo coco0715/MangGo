@@ -1,13 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class CardManager : MonoBehaviour
-{
-	public static CardManager Instance;
-    
-	public GameObject card;
+{    
+	//public GameObject card;
+    Transform parent;
 
 	private const float INTERVAL = 1.4f;
 	private const float START_POSITION_X = -2;
@@ -17,12 +17,13 @@ public class CardManager : MonoBehaviour
 	private Sprite[] resources;
     private int[] indices;
 
-    private static string[] MemberNames = { "이장원","김대열","임지연","최하나" };
+    private static string[] MemberNames = { "이장원","김대열","윤지연","최하나" };
     private static string[][] MemberDescs = {
         new string[] { "고양이❤️", "STPB" ,"보디빌딩"},
         new string[] { "고양이❤️", "STPB","요리" },
         new string[] { "수달❤️", "ISFP" ,"그림"},
         new string[] { "강아지❤️", "ISFP","독서" }
+        //❤️
     };
 
     private string selectedMember = null;
@@ -33,40 +34,25 @@ public class CardManager : MonoBehaviour
     
     private bool isAnimationStarted = false;
 
-    private void Awake()
-    {
-		if (Instance != null && Instance != this) {
-			Destroy(this);
-		}else
-		{
-            Instance = this;
-        }
-    }
-
-    // Use this for initialization
-    void Start()
+    public void SetParent()
 	{
-        InitCard();
+        parent = GameObject.Find("Cards").transform;
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-
-	}
-
-	private void InitCard()
+	public void InitCard()
 	{
         //load resources
         resources = Resources.LoadAll<Sprite>(Card.CARD_PATH);
 
         //TODO : 설명카드 배열작업 
-        for(var i = 0; i < MemberNames.Length; i++)
+        for(int i = 0; i < MemberNames.Length; i++)
         {
-            var position = new Vector3(START_POSITION_X + i *INTERVAL, 2f,0f);
-            var descCard = Instantiate(card, position, Quaternion.identity);
-            var desc = MemberDescs[i];
-            var descCardBehavior = descCard.GetComponent<Card>();
+            Vector3 position = new Vector3(START_POSITION_X + i *INTERVAL, 2f,0f);
+            var descCard = Instantiate(Resources.Load<GameObject>("Prefabs/card"), position, Quaternion.identity);
+            //descCard.transform.SetParent(parent);
+            string[] desc = MemberDescs[i];
+            Card descCardBehavior = descCard.GetComponent<Card>();
+            descCardBehavior.SetDesc();
             //desc
             descCardBehavior.SetCardType(CardType.Desc);
             descCardBehavior.SetMember(MemberNames[i]);
@@ -89,7 +75,8 @@ public class CardManager : MonoBehaviour
 			var row = i / 4;
 			
             var position = new Vector3(START_POSITION_X + col * INTERVAL, START_POSITION_Y + row * INTERVAL , 0f);
-            var cardGameObj = Instantiate(card, position, Quaternion.identity);
+            var cardGameObj = Instantiate(Resources.Load<GameObject>("Prefabs/card"), position, Quaternion.identity);
+            //cardGameObj.transform.SetParent(parent);
             Debug.Log($"resource is {resources[indices[i]]}");
             cardGameObj.transform.Find(Card.FRONT).GetComponent<SpriteRenderer>().sprite = resources[indices[i]];
             
