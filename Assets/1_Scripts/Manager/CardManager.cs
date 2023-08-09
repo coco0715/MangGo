@@ -22,7 +22,6 @@ public class CardManager : MonoBehaviour
     private int[] _indices;
 
     private static readonly string[] MemberNames = { "이장원", "김대열", "윤지연", "최하나" };
-
     private static readonly string[][] MemberDescs =
     {
         new string[] { "INTP", "게임", "취업하자!" },
@@ -32,12 +31,12 @@ public class CardManager : MonoBehaviour
     };
 
     private string _selectedMember;
-
     private Card _memberCard;
     private Card _firstCard;
     private Card _secondCard;
-
     private bool _isAnimationStarted;
+
+    UI_Main mainUI;
 
     private void Awake()
     {
@@ -50,16 +49,10 @@ public class CardManager : MonoBehaviour
             Instance = this;
         }
     }
-
-    // Use this for initialization
+    
     void Start()
     {
         InitCard();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 
     private void InitCard()
@@ -141,6 +134,7 @@ public class CardManager : MonoBehaviour
 
     public void SelectCard(Card memberCard)
     {
+        mainUI = GameObject.Find("UI_Main").GetComponent<UI_Main>();
         if (_firstCard == null)
         {
             _firstCard = memberCard;
@@ -156,8 +150,6 @@ public class CardManager : MonoBehaviour
 
             //만약 같으면 카드 파괴
             var result = Managers.Match.CheckMatch(_memberCard, _firstCard, _secondCard);
-            Debug.Log($"1Card.member is {_firstCard.member} & 2Card.member is {_secondCard.member}");
-            Debug.Log($"1Card.member is {_firstCard.imgType} & 2Card.member is {_secondCard.imgType}");
             switch (result)
             {
                 case 0:
@@ -167,21 +159,25 @@ public class CardManager : MonoBehaviour
                     _secondCard.Fadeout();
                     Invoke(MethodDestroyCards, 0.5f);
                     Debug.Log("매칭 성공!");
+                    mainUI.ShowCheckText(memberCard.member);
                     break;
                 case 1:
                     //TODO 점수 -1 감점하기
                     Invoke(MethodCloseCards, 0.5f);
                     Debug.Log("그림 O, 멤버 X");
+                    mainUI.ShowCheckText("실패");
                     break;
                 case 2:
                     //TODO 점수 -2 감점하기
                     Debug.Log("그림 X, 멤버 O");
                     Invoke(MethodCloseCards, 0.5f);
+                    mainUI.ShowCheckText("실패");
                     break;
                 case 3:
                     //TODO 점수 -3 감점하기
                     Debug.Log("그림 X, 멤버 X");
                     Invoke(MethodCloseCards, 0.5f);
+                    mainUI.ShowCheckText("실패");
                     break;
 
                 default: throw new InvalidDataException("결과값은 반드시 0,1,2,3 중 하나여야만 한다.");

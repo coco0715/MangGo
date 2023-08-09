@@ -51,4 +51,9 @@ public class Managers : MonoBehaviour
             Application.targetFrameRate = 60;
         }
     }
+
+    public void SartCoroutine(string methodName, string parameters)
+    {
+        StartCoroutine(methodName, parameters);
+    }
 }
