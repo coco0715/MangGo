@@ -27,7 +27,7 @@ public class CardManager : MonoBehaviour
     {
         new string[] { "ENFP️", "게임", "지지말자!" },
         new string[] { "ENTP", "보디빌딩", "힘내자!" },
-        new string[] { "INFJ", "게임", "취업하자!" },
+        new string[] { "INTP", "게임", "취업하자!" },
         new string[] { "INFJ️", "낮잠자기", "운전하기" },
     };
 
@@ -106,6 +106,7 @@ public class CardManager : MonoBehaviour
             //멤버명 할당과 이미지 타입 할당.
             cardData.member = MemberNames[_indices[i] / 2];
             cardData.imgType = _indices[i] % 2 == 0 ? $"{cardData.member}A" : $"{cardData.member}B";
+            
         }
     }
 

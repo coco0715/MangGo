@@ -132,7 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 601195354}
-  - component: {fileID: 601195353}
+  - component: {fileID: 601195355}
   m_Layer: 0
   m_Name: CardManager
   m_TagString: Untagged
@@ -140,19 +140,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &601195353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 601195352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7822adaa805a74d8cbd5445b24cf13e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  card: {fileID: 8608915326762381898, guid: 2e6a6a78fe0517747ba2f0a6ba357551, type: 3}
 --- !u!4 &601195354
 Transform:
   m_ObjectHideFlags: 0
@@ -168,6 +155,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &601195355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601195352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84f78db83c012074aac3765cf748beea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  card: {fileID: 8608915326762381898, guid: 2e6a6a78fe0517747ba2f0a6ba357551, type: 3}
 --- !u!1 &879219189
 GameObject:
   m_ObjectHideFlags: 0
