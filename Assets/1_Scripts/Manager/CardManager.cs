@@ -23,6 +23,7 @@ public class CardManager : MonoBehaviour
     private int[] _indices;
 
     private static readonly string[] MemberNames = { "김대열", "윤지연", "이장원", "최하나" };
+
     private static readonly string[][] MemberDescs =
     {
         new string[] { "ENTP", "보디빌딩", "힘내자!" },
@@ -32,11 +33,13 @@ public class CardManager : MonoBehaviour
     };
 
     private string _selectedMember;
-    private Card _memberCard;
+    private readonly List<Card> _memberCards = new();
+    private Card _selectedMemberCard;
     private Card _firstCard;
     private Card _secondCard;
     private bool _isAnimationStarted;
-
+    private int _cardCount = 16;
+    private bool _isFirstlyInitCard = true;
     UI_Main mainUI;
 
     private void Awake()
@@ -50,7 +53,7 @@ public class CardManager : MonoBehaviour
             Instance = this;
         }
     }
-    
+
     void Start()
     {
         InitCard();
@@ -58,19 +61,24 @@ public class CardManager : MonoBehaviour
 
     private void InitCard()
     {
+        _cardCount = 16;
         //load resources
         _resources = Resources.LoadAll<Sprite>(Card.CARD_PATH);
 
         //TODO : 설명카드 배열작업 
-        for (var i = 0; i < MemberNames.Length; i++)
+        if (_isFirstlyInitCard)
         {
-            var position = new Vector3(StartPositionX + i * Interval, 2f, 0f);
-            var descCard = Instantiate(card, position, Quaternion.identity);
-            var descCardBehavior = descCard.GetComponent<Card>();
-            //desc
-            descCardBehavior.SetCardType(CardType.Desc);
-            descCardBehavior.SetMember(MemberNames[i]);
-            descCardBehavior.SetDescriptions(MemberDescs[i]);
+            for (var i = 0; i < MemberNames.Length; i++)
+            {
+                var position = new Vector3(StartPositionX + i * Interval, 2f, 0f);
+                var descCard = Instantiate(card, position, Quaternion.identity);
+                var descCardBehavior = descCard.GetComponent<Card>();
+                //desc
+                descCardBehavior.SetCardType(CardType.Desc);
+                descCardBehavior.SetMember(MemberNames[i]);
+                descCardBehavior.SetDescriptions(MemberDescs[i]);
+                _memberCards.Add(descCardBehavior);
+            }
         }
 
         //shuffle indices
@@ -78,8 +86,11 @@ public class CardManager : MonoBehaviour
         for (var i = 0; i < _resources.Length; i++)
         {
             //카드는 2장이므로 2번 더함
-            listOfIndex.Add(i);
-            listOfIndex.Add(i);
+            var repeat = _cardCount / _resources.Length;
+            for (var j = 0; j < repeat; j++)
+            {
+                listOfIndex.Add(i);
+            }
         }
 
         _indices = listOfIndex.OrderBy(_ => Random.Range(-1f, 1f)).ToArray();
@@ -93,7 +104,7 @@ public class CardManager : MonoBehaviour
             var cardGameObj = Instantiate(card, position, Quaternion.identity);
             cardGameObj.transform.localScale = new Vector3(100f, 100f, 0f);
             Debug.Log($"resource is {_resources[_indices[i]]}");
-            
+
             //resource 
             cardGameObj.transform.Find(Card.FRONT).GetComponent<SpriteRenderer>().sprite = _resources[_indices[i]];
             var cardData = cardGameObj.GetComponent<Card>();
@@ -106,31 +117,31 @@ public class CardManager : MonoBehaviour
 
     public void SelectMemberCard(Card memberCard)
     {
-        if (_memberCard == null)
+        if (_selectedMemberCard == null)
         {
-            _memberCard = memberCard;
+            _selectedMemberCard = memberCard;
         }
-        else if (_memberCard == memberCard)
+        else if (_selectedMemberCard == memberCard)
         {
-            _memberCard.SetBorderInactive();
-            _memberCard = null;
+            _selectedMemberCard.SetBorderInactive();
+            _selectedMemberCard = null;
         }
         else
         {
-            _memberCard.SetBorderInactive();
-            _memberCard = memberCard;
+            _selectedMemberCard.SetBorderInactive();
+            _selectedMemberCard = memberCard;
         }
     }
 
     public void UnSelectMemberCard()
     {
-        _memberCard.SetBorderInactive();
-        _memberCard = null;
+        _selectedMemberCard.SetBorderInactive();
+        _selectedMemberCard = null;
     }
 
     public bool IsSelectedMemberSameAs(Card memberCard)
     {
-        return _memberCard == memberCard;
+        return _selectedMemberCard == memberCard;
     }
 
     public void SelectCard(Card memberCard)
@@ -150,7 +161,7 @@ public class CardManager : MonoBehaviour
             // Invoke(MethodCloseCards, 1f);
 
             //만약 같으면 카드 파괴
-            var result = Managers.Match.CheckMatch(_memberCard, _firstCard, _secondCard);
+            var result = Managers.Match.CheckMatch(_selectedMemberCard, _firstCard, _secondCard);
             switch (result)
             {
                 case 0:
@@ -201,8 +212,8 @@ public class CardManager : MonoBehaviour
         _secondCard.AnimateClose();
         _firstCard = null;
         _secondCard = null;
-        _memberCard.SetBorderInactive();
-        _memberCard = null;
+        _selectedMemberCard.SetBorderInactive();
+        _selectedMemberCard = null;
         _isAnimationStarted = false;
     }
 
@@ -212,10 +223,16 @@ public class CardManager : MonoBehaviour
         Destroy(_secondCard.gameObject);
         _firstCard = null;
         _secondCard = null;
-        _memberCard.Progress();
-        _memberCard.SetBorderInactive();
-        _memberCard = null;
+        _selectedMemberCard.Progress();
+        _selectedMemberCard.SetBorderInactive();
+        _selectedMemberCard = null;
         _isAnimationStarted = false;
+        _cardCount -= 2;
+
+        if (_cardCount == 0)
+        {
+            InitCard();
+        }
     }
 
     public bool IsAnimationStarted()
@@ -225,7 +242,7 @@ public class CardManager : MonoBehaviour
 
     public bool IsMemberCardSelected()
     {
-        return _memberCard != null;
+        return _selectedMemberCard != null;
     }
 
     public string GetDescription(string member, int index)
@@ -238,5 +255,14 @@ public class CardManager : MonoBehaviour
         }
 
         return MemberDescs[memberIndex][index];
+    }
+
+    public void NoticeSelectMemberCardFirstly()
+    {
+        _memberCards.ForEach(it =>
+        {
+            Debug.Log($"memberCard:{it}");
+            it.AnimateScaleUp();
+        });
     }
 }
