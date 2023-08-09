@@ -1,71 +1,77 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Random = UnityEngine.Random;
 
 public class CardManager : MonoBehaviour
 {
-	public static CardManager Instance;
-    
-	public GameObject card;
+    public static CardManager Instance;
 
-	private const float INTERVAL = 1.4f;
-	private const float START_POSITION_X = -2;
-    private const float START_POSITION_Y = -4f;
-    private const string CLOSE_CARDS = "CloseCards";
+    public GameObject card;
 
-	private Sprite[] resources;
-    private int[] indices;
+    private const float Interval = 1.4f;
+    private const float StartPositionX = -2;
+    private const float StartPositionY = -4f;
+    private const string MethodCloseCards = "CloseCards";
+    private const string MethodDestroyCards = "DestroyCards";
 
-    private static string[] MemberNames = { "이장원","김대열","임지연","최하나" };
-    private static string[][] MemberDescs = {
-        new string[] { "고양이❤️", "STPB" ,"보디빌딩"},
-        new string[] { "고양이❤️", "STPB","요리" },
-        new string[] { "수달❤️", "ISFP" ,"그림"},
-        new string[] { "강아지❤️", "ISFP","독서" }
+    private Sprite[] _resources;
+    private int[] _indices;
+
+    private static readonly string[] MemberNames = { "이장원", "김대열", "윤지연", "최하나" };
+
+    private static readonly string[][] MemberDescs =
+    {
+        new string[] { "ENFP️", "게임", "지지말자!" },
+        new string[] { "ENTP", "보디빌딩", "힘내자!" },
+        new string[] { "INFJ", "게임", "취업하자!" },
+        new string[] { "INFJ️", "낮잠자기", "운전하기" },
     };
 
-    private string selectedMember = null;
+    private string _selectedMember;
 
-    private Card memberCard = null;
-    private Card firstCard = null;
-    private Card secondCard = null;
-    
-    private bool isAnimationStarted = false;
+    private Card _memberCard;
+    private Card _firstCard;
+    private Card _secondCard;
+
+    private bool _isAnimationStarted;
 
     private void Awake()
     {
-		if (Instance != null && Instance != this) {
-			Destroy(this);
-		}else
-		{
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
             Instance = this;
         }
     }
 
     // Use this for initialization
     void Start()
-	{
+    {
         InitCard();
-	}
+    }
 
-	// Update is called once per frame
-	void Update()
-	{
+    // Update is called once per frame
+    void Update()
+    {
+    }
 
-	}
-
-	private void InitCard()
-	{
+    private void InitCard()
+    {
         //load resources
-        resources = Resources.LoadAll<Sprite>(Card.CARD_PATH);
+        _resources = Resources.LoadAll<Sprite>(Card.CARD_PATH);
 
         //TODO : 설명카드 배열작업 
-        for(var i = 0; i < MemberNames.Length; i++)
+        for (var i = 0; i < MemberNames.Length; i++)
         {
-            var position = new Vector3(START_POSITION_X + i *INTERVAL, 2f,0f);
+            var position = new Vector3(StartPositionX + i * Interval, 2f, 0f);
             var descCard = Instantiate(card, position, Quaternion.identity);
-            var desc = MemberDescs[i];
             var descCardBehavior = descCard.GetComponent<Card>();
             //desc
             descCardBehavior.SetCardType(CardType.Desc);
@@ -75,93 +81,134 @@ public class CardManager : MonoBehaviour
 
         //shuffle indices
         var listOfIndex = new List<int>();
-        for (var i = 0; i < resources.Length; i++)
+        for (var i = 0; i < _resources.Length; i++)
         {
             //카드는 2장이므로 2번 더함
             listOfIndex.Add(i);
             listOfIndex.Add(i);
         }
 
-        indices = listOfIndex.OrderBy(_ => Random.Range(-1f, 1f)).ToArray();
+        _indices = listOfIndex.OrderBy(_ => Random.Range(-1f, 1f)).ToArray();
 
-        for (var i = 0; i < 16; i++) {
-			var col = i % 4;
-			var row = i / 4;
-			
-            var position = new Vector3(START_POSITION_X + col * INTERVAL, START_POSITION_Y + row * INTERVAL , 0f);
+        for (var i = 0; i < 16; i++)
+        {
+            var col = i % 4;
+            var row = i / 4;
+
+            var position = new Vector3(StartPositionX + col * Interval, StartPositionY + row * Interval, 0f);
             var cardGameObj = Instantiate(card, position, Quaternion.identity);
-            Debug.Log($"resource is {resources[indices[i]]}");
-            cardGameObj.transform.Find(Card.FRONT).GetComponent<SpriteRenderer>().sprite = resources[indices[i]];
+            Debug.Log($"resource is {_resources[_indices[i]]}");
             
-        }
-	}
+            //resource 
+            cardGameObj.transform.Find(Card.FRONT).GetComponent<SpriteRenderer>().sprite = _resources[_indices[i]];
+            var cardData = cardGameObj.GetComponent<Card>();
 
-
-    /// <summary>
-    ///   <para>멤버카드를 선택합니다.</para>
-    /// </summary>
-    /// <param name="card">선택한 멤버카드</param>
-    /// <returns>
-    ///   <para>동작 이후에 카드가 선택된 상태인지를 반환한다.</para>
-    /// </returns>
-    public void SelectMemberCard(Card card)
-    {
-        if (memberCard == card) {
-            card.ClickCard();
-            memberCard = null;
-        }else
-        {
-            memberCard = card;
+            //멤버명 할당과 이미지 타입 할당.
+            cardData.member = MemberNames[_indices[i] / 2];
+            cardData.imgType = _indices[i] % 2 == 0 ? $"{cardData.member}A" : $"{cardData.member}B";
         }
     }
 
-    public bool IsSelectedMemberSameAs(Card card)
+    public void SelectMemberCard(Card memberCard)
     {
-        return memberCard == card;
-    }
-
-    public void SelectCard(Card card)
-    {
-        if(firstCard == null)
+        if (_memberCard == null)
         {
-            firstCard = card;
-            card.AnimateOpen();
-        }else if(secondCard == null)
+            _memberCard = memberCard;
+        }
+        else if (_memberCard == memberCard)
         {
-            isAnimationStarted = true;
-            secondCard = card;
-            secondCard.AnimateOpen();
-
-            // TODO : matchManger 와 통신
-            Invoke(CLOSE_CARDS, 1f);
-        }else
+            _memberCard.SetBorderInactive();
+            _memberCard = null;
+        }
+        else
         {
-            //do nothing
-            return;
+            _memberCard.SetBorderInactive();
+            _memberCard = memberCard;
         }
     }
 
-    public void SelectMember(string member)
+    public void UnSelectMemberCard()
     {
-        if(selectedMember == member) {
-            selectedMember = null;
-        }else{
-            selectedMember = member;
+        _memberCard.SetBorderInactive();
+        _memberCard = null;
+    }
+
+    public bool IsSelectedMemberSameAs(Card memberCard)
+    {
+        return _memberCard == memberCard;
+    }
+
+    public void SelectCard(Card memberCard)
+    {
+        if (_firstCard == null)
+        {
+            _firstCard = memberCard;
+            memberCard.AnimateOpen();
         }
+        else if (_secondCard == null)
+        {
+            _isAnimationStarted = true;
+            _secondCard = memberCard;
+            _secondCard.AnimateOpen();
+
+            // Invoke(MethodCloseCards, 1f);
+
+            //만약 같으면 카드 파괴
+            var result = Managers.Match.CheckMatch(_memberCard, _firstCard, _secondCard);
+
+            switch (result)
+            {
+                case 0: // intentionally skip
+                case 1:
+                    Debug.Log("matchSuccess");
+                    _firstCard.Fadeout();
+                    _secondCard.Fadeout();
+                    Invoke(MethodDestroyCards, 0.5f);
+                    Debug.Log("그림 맞음");
+                    break;
+                case 2:
+                    Debug.Log("멤버와 다름");
+                    Invoke(MethodCloseCards, 0.5f);
+                    break;
+                case 3:
+                    Debug.Log("싹 다 다름");
+                    Invoke(MethodCloseCards, 0.5f);
+                    break;
+
+                default: throw new InvalidDataException("결과값은 반드시 0,1,2,3 중 하나여야만 한다.");
+            }
+        } //else do nothing
     }
 
     private void CloseCards()
     {
-        firstCard.AnimateClose();
-        secondCard.AnimateClose();
-        firstCard = null;
-        secondCard = null;
-        isAnimationStarted = false;
+        _firstCard.AnimateClose();
+        _secondCard.AnimateClose();
+        _firstCard = null;
+        _secondCard = null;
+        _memberCard.SetBorderInactive();
+        _memberCard = null;
+        _isAnimationStarted = false;
+    }
+
+    private void DestroyCards()
+    {
+        Destroy(_firstCard.gameObject);
+        Destroy(_secondCard.gameObject);
+        _firstCard = null;
+        _secondCard = null;
+        _memberCard.SetBorderInactive();
+        _memberCard = null;
+        _isAnimationStarted = false;
     }
 
     public bool IsAnimationStarted()
     {
-        return isAnimationStarted;
+        return _isAnimationStarted;
+    }
+
+    public bool IsMemberCardSelected()
+    {
+        return _memberCard != null;
     }
 }
-
