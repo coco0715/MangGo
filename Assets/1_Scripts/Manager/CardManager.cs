@@ -11,6 +11,7 @@ public class CardManager : MonoBehaviour
     public static CardManager Instance;
 
     public GameObject card;
+    public static int MaxProgress = 2;
 
     private const float Interval = 1.4f;
     private const float StartPositionX = -2;
@@ -21,11 +22,11 @@ public class CardManager : MonoBehaviour
     private Sprite[] _resources;
     private int[] _indices;
 
-    private static readonly string[] MemberNames = { "이장원", "김대열", "윤지연", "최하나" };
+    private static readonly string[] MemberNames = { "김대열", "윤지연", "이장원", "최하나" };
     private static readonly string[][] MemberDescs =
     {
-        new string[] { "INTP", "게임", "취업하자!" },
         new string[] { "ENTP", "보디빌딩", "힘내자!" },
+        new string[] { "INTP", "게임", "취업하자!" },
         new string[] { "ENFP️", "게임", "지지말자!" },
         new string[] { "INFJ️", "낮잠자기", "운전하기" },
     };
@@ -202,6 +203,7 @@ public class CardManager : MonoBehaviour
         Destroy(_secondCard.gameObject);
         _firstCard = null;
         _secondCard = null;
+        _memberCard.Progress();
         _memberCard.SetBorderInactive();
         _memberCard = null;
         _isAnimationStarted = false;
@@ -215,5 +217,17 @@ public class CardManager : MonoBehaviour
     public bool IsMemberCardSelected()
     {
         return _memberCard != null;
+    }
+
+    public string GetDescription(string member, int index)
+    {
+        var memberIndex = 0;
+        foreach (var memberName in MemberNames)
+        {
+            if (memberName == member) break;
+            memberIndex++;
+        }
+
+        return MemberDescs[memberIndex][index];
     }
 }
