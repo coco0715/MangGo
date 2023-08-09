@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class Card : MonoBehaviour
     public Animator anim;
     public GameObject border;
     public Text desc;
+    public GameObject progressBox;
 
     public static string FRONT = "front";
     public static string BACK = "back";
@@ -23,6 +25,7 @@ public class Card : MonoBehaviour
     public static string CARD_PATH = "Sprites/member";
     private static string BORDER = "Border";
 
+    private int progress;
 
     private bool isOpen;
     internal CardType cardType { get; private set; } = CardType.Image;
@@ -30,16 +33,6 @@ public class Card : MonoBehaviour
     public string member = "";
     public string imgType = "";
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     internal void SetCardType(CardType cardType)
     {
@@ -67,8 +60,10 @@ public class Card : MonoBehaviour
 
     public void SetDescriptions(string[] descs)
     {
+        progressBox.SetActive(true);
+
         string text = member + "\n";
-        text = descs.Aggregate(text, (current, desc) => current + (desc + "\n"));
+        text += $"{descs[0]}\n";
 
         desc.text = text;
         Debug.Log($"text:{text}", border);
@@ -124,11 +119,6 @@ public class Card : MonoBehaviour
             //show text 
             Debug.Log("멤버카드가 선택되지 않았음.");
         }
-
-        /* todo
-         * 1. 카드 열었을 경우 선택된 카드가 있는지 ...??
-         * 2. 카드 선택된 카드와 비교는 내가 안함 // 매치 매니저에 통신...
-         */
     }
 
     public void AnimateOpen()
@@ -158,5 +148,26 @@ public class Card : MonoBehaviour
     public void Fadeout()
     {
         anim.SetBool("isDestroyed", true);
+    }
+
+    public void Progress()
+    {
+        if (cardType != CardType.Desc)
+        {
+            throw new InvalidDataException("진행도 호출은 오로지 설명 카드에서만 호출.");
+        }
+
+        progress++;
+        var progressFloat = progress / (float)CardManager.MaxProgress;
+        Debug.Log($"progress = {progressFloat}");
+        desc.text += $"{CardManager.Instance.GetDescription(member, progress)}\n";
+        
+        //UI update
+        progressBox.transform.localScale = new Vector3(1f, progressFloat);
+        if (progress == CardManager.MaxProgress)
+        {
+            //임시방편 
+            progressBox.transform.localPosition = new Vector3(0f,0f,0f);
+        }
     }
 }
