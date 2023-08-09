@@ -1,38 +1,9 @@
-<<<<<<< HEAD:Assets/1_Scripts/Manager/CardManager.cs
-﻿using System.Collections;
-=======
 ﻿using System;
 using UnityEngine;
 using System.Collections;
->>>>>>> card's_desc:Assets/Scripts/CardManager.cs
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-<<<<<<< HEAD:Assets/1_Scripts/Manager/CardManager.cs
-using UnityEngine;
-using UnityEngine.UI;
-
-public class CardManager : MonoBehaviour
-{    
-	//public GameObject card;
-    Transform parent;
-
-	private const float INTERVAL = 1.4f;
-	private const float START_POSITION_X = -2;
-    private const float START_POSITION_Y = -4f;
-    private const string CLOSE_CARDS = "CloseCards";
-
-	private Sprite[] resources;
-    private int[] indices;
-
-    private static string[] MemberNames = { "이장원","김대열","윤지연","최하나" };
-    private static string[][] MemberDescs = {
-        new string[] { "고양이❤️", "STPB" ,"보디빌딩"},
-        new string[] { "고양이❤️", "STPB","요리" },
-        new string[] { "수달❤️", "ISFP" ,"그림"},
-        new string[] { "강아지❤️", "ISFP","독서" }
-        //❤️
-=======
 using Random = UnityEngine.Random;
 
 public class CardManager : MonoBehaviour
@@ -58,7 +29,6 @@ public class CardManager : MonoBehaviour
         new string[] { "ENTP", "보디빌딩", "힘내자!" },
         new string[] { "INFJ", "게임", "취업하자!" },
         new string[] { "INFJ️", "낮잠자기", "운전하기" },
->>>>>>> card's_desc:Assets/Scripts/CardManager.cs
     };
 
     private string _selectedMember;
@@ -69,15 +39,6 @@ public class CardManager : MonoBehaviour
 
     private bool _isAnimationStarted;
 
-<<<<<<< HEAD:Assets/1_Scripts/Manager/CardManager.cs
-    public void SetParent()
-	{
-        parent = GameObject.Find("Cards").transform;
-	}
-
-	public void InitCard()
-	{
-=======
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -103,27 +64,15 @@ public class CardManager : MonoBehaviour
 
     private void InitCard()
     {
->>>>>>> card's_desc:Assets/Scripts/CardManager.cs
         //load resources
         _resources = Resources.LoadAll<Sprite>(Card.CARD_PATH);
 
         //TODO : 설명카드 배열작업 
-<<<<<<< HEAD:Assets/1_Scripts/Manager/CardManager.cs
-        for(int i = 0; i < MemberNames.Length; i++)
-        {
-            Vector3 position = new Vector3(START_POSITION_X + i *INTERVAL, 2f,0f);
-            var descCard = Instantiate(Resources.Load<GameObject>("Prefabs/card"), position, Quaternion.identity);
-            //descCard.transform.SetParent(parent);
-            string[] desc = MemberDescs[i];
-            Card descCardBehavior = descCard.GetComponent<Card>();
-            descCardBehavior.SetDesc();
-=======
         for (var i = 0; i < MemberNames.Length; i++)
         {
             var position = new Vector3(StartPositionX + i * Interval, 2f, 0f);
             var descCard = Instantiate(card, position, Quaternion.identity);
             var descCardBehavior = descCard.GetComponent<Card>();
->>>>>>> card's_desc:Assets/Scripts/CardManager.cs
             //desc
             descCardBehavior.SetCardType(CardType.Desc);
             descCardBehavior.SetMember(MemberNames[i]);
@@ -146,21 +95,9 @@ public class CardManager : MonoBehaviour
             var col = i % 4;
             var row = i / 4;
 
-<<<<<<< HEAD:Assets/1_Scripts/Manager/CardManager.cs
-        for (var i = 0; i < 16; i++) {
-			var col = i % 4;
-			var row = i / 4;
-			
-            var position = new Vector3(START_POSITION_X + col * INTERVAL, START_POSITION_Y + row * INTERVAL , 0f);
-            var cardGameObj = Instantiate(Resources.Load<GameObject>("Prefabs/card"), position, Quaternion.identity);
-            //cardGameObj.transform.SetParent(parent);
-            Debug.Log($"resource is {resources[indices[i]]}");
-            cardGameObj.transform.Find(Card.FRONT).GetComponent<SpriteRenderer>().sprite = resources[indices[i]];
-=======
             var position = new Vector3(StartPositionX + col * Interval, StartPositionY + row * Interval, 0f);
             var cardGameObj = Instantiate(card, position, Quaternion.identity);
             Debug.Log($"resource is {_resources[_indices[i]]}");
->>>>>>> card's_desc:Assets/Scripts/CardManager.cs
             
             //resource 
             cardGameObj.transform.Find(Card.FRONT).GetComponent<SpriteRenderer>().sprite = _resources[_indices[i]];
