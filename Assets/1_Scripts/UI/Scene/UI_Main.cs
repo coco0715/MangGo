@@ -36,7 +36,7 @@ public class UI_Main : UI_Scene
         BindText(typeof(Texts));
 
         //Managers.CardMng.SetParent();
-        Managers.CardMng.InitCard();
+        //Managers.CardMng.InitCard();
 
         // Sound
         Managers.Sound.Clear();

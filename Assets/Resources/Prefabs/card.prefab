@@ -795,8 +795,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6097478495122987524}
   - component: {fileID: -6069545269760895113}
-  - component: {fileID: -7727562669877338029}
   - component: {fileID: -4088024898525063115}
+  - component: {fileID: 1622947215988581778}
   m_Layer: 0
   m_Name: card
   m_TagString: Untagged
@@ -844,23 +844,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-7727562669877338029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8608915326762381898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1ef9467998196a40af268672dd4b6b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anim: {fileID: -6069545269760895113}
-  border: {fileID: 8535915067466620874}
-  desc: {fileID: 8048434297361015648}
-  member: 
-  imgType: 
 --- !u!114 &-4088024898525063115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -905,7 +888,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -7727562669877338029}
+      - m_Target: {fileID: 1622947215988581778}
         m_TargetAssemblyTypeName: Card, Assembly-CSharp
         m_MethodName: ClickCard
         m_Mode: 1
@@ -917,3 +900,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1622947215988581778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8608915326762381898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55fd46d40af673045b42532fc05fc208, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: -6069545269760895113}
+  border: {fileID: 8535915067466620874}
+  desc: {fileID: 2804352260771961178}
+  member: 
+  imgType: 

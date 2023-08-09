@@ -21,7 +21,7 @@ public class MatchManager
     } 
 
     // TODO: Cards -> Card로 변경
-    public int CheckMatch(Cards card1, Cards card2, Cards card3)
+    public int CheckMatch(Card card1, Card card2, Card card3)
     { 
         successMatch = false;
         if(card2.imgType ==  card3.imgType)

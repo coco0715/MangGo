@@ -20,7 +20,7 @@ public class Card : MonoBehaviour
     public static string FRONT = "front";
     public static string BACK = "back";
     public static string DESC = "Desc";
-    public static string CARD_PATH = "rtan";
+    public static string CARD_PATH = "Sprites/rtan";
     private static string BORDER = "Border";
 
 
@@ -33,7 +33,7 @@ public class Card : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -46,7 +46,7 @@ public class Card : MonoBehaviour
         this.cardType = cardType;
         transform.Find(FRONT).gameObject.SetActive(false);
         transform.Find(BACK).gameObject.SetActive(false);
-        
+
         switch (cardType)
         {
             case CardType.Desc:
@@ -124,7 +124,7 @@ public class Card : MonoBehaviour
             //show text 
             Debug.Log("멤버카드가 선택되지 않았음.");
         }
-        
+
         /* todo
          * 1. 카드 열었을 경우 선택된 카드가 있는지 ...??
          * 2. 카드 선택된 카드와 비교는 내가 안함 // 매치 매니저에 통신...
@@ -138,16 +138,16 @@ public class Card : MonoBehaviour
         transform.Find(FRONT).gameObject.SetActive(isOpen);
         transform.Find(BACK).gameObject.SetActive(!isOpen);
     }
-    
+
     public void AnimateClose()
     {
         isOpen = false;
         anim.SetBool("isOpen", isOpen);
         transform.Find(FRONT).gameObject.SetActive(isOpen);
-        
+
         var back = transform.Find(BACK).gameObject;
         var backRenderer = back.GetComponent<SpriteRenderer>();
-        backRenderer.color = Color.gray.WithAlpha(alpha:0.8f);
+        backRenderer.color = Color.gray.WithAlpha(alpha: 0.8f);
         back.SetActive(!isOpen);
 
         //border
@@ -157,6 +157,6 @@ public class Card : MonoBehaviour
 
     public void Fadeout()
     {
-        anim.SetBool("isDestroyed",true);
+        anim.SetBool("isDestroyed", true);
     }
 }
