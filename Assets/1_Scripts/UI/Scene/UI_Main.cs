@@ -8,6 +8,7 @@ public class UI_Main : UI_Scene
     enum Texts
     {
         timeText,
+        CheckText,
     }
 
     void Start()
@@ -35,13 +36,26 @@ public class UI_Main : UI_Scene
 
         BindText(typeof(Texts));
 
-        //Managers.CardMng.SetParent();
-        //Managers.CardMng.InitCard();
+        GetText((int)Texts.CheckText).gameObject.SetActive(false);
 
-        // Sound
-        Managers.Sound.Clear();
+       // Sound
+       Managers.Sound.Clear();
         //Managers.Sound.Play("LobbyBgm", Define.Sound.Bgm);
 
         return true;
+    }
+
+    public void ShowCheckText(string content)
+    {
+        CoroutineHelper.StartCoroutine(CoCheckText(content));
+    }
+
+    IEnumerator CoCheckText(string content)
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.7f);
+        GetText((int)Texts.CheckText).gameObject.SetActive(true);
+        GetText((int)Texts.CheckText).text = content;
+        yield return waitForSeconds;
+        GetText((int)Texts.CheckText).gameObject.SetActive(false);
     }
 }

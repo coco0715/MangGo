@@ -30,12 +30,16 @@ public class UI_Result : UI_Popup
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
-        GetButton((int)Buttons.RetryButton).gameObject.BindEvent(() => Managers.Scene.ChangeScene(Define.Scene.MainScene));
+        GetButton((int)Buttons.RetryButton).gameObject.BindEvent(() => {
+            SceneManager.LoadScene(Managers.Scene.GetSceneName(Managers.Scene.CurrentSceneType));
+            Time.timeScale = 1;
+        });
         GetButton((int)Buttons.QuitButton).gameObject.BindEvent(() => Managers.Scene.ChangeScene(Define.Scene.LobbyScene));
         SetRewardObjects(false);
 
         StartCoroutine("ShowResult");
 
+        Time.timeScale = 0;
         GetComponent<Canvas>().sortingOrder = 10;
 
         // Sound
