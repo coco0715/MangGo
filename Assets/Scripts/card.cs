@@ -20,7 +20,7 @@ public class Card : MonoBehaviour
     public static string FRONT = "front";
     public static string BACK = "back";
     public static string DESC = "Desc";
-    public static string CARD_PATH = "Sprites/rtan";
+    public static string CARD_PATH = "Sprites/member";
     private static string BORDER = "Border";
 
 

@@ -97,6 +97,7 @@ public class CardManager : MonoBehaviour
 
             var position = new Vector3(StartPositionX + col * Interval, StartPositionY + row * Interval, 0f);
             var cardGameObj = Instantiate(card, position, Quaternion.identity);
+            cardGameObj.transform.localScale = new Vector3(100f, 100f, 0f);
             Debug.Log($"resource is {_resources[_indices[i]]}");
             
             //resource 
@@ -106,7 +107,6 @@ public class CardManager : MonoBehaviour
             //멤버명 할당과 이미지 타입 할당.
             cardData.member = MemberNames[_indices[i] / 2];
             cardData.imgType = _indices[i] % 2 == 0 ? $"{cardData.member}A" : $"{cardData.member}B";
-            
         }
     }
 
