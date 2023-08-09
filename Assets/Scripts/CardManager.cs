@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 public class CardManager : MonoBehaviour
 {
     public static CardManager Instance;
-
+    public const int MaxProgress = 2;
     public GameObject card;
 
     private const float Interval = 1.4f;
@@ -21,13 +21,13 @@ public class CardManager : MonoBehaviour
     private Sprite[] _resources;
     private int[] _indices;
 
-    private static readonly string[] MemberNames = { "이장원", "김대열", "윤지연", "최하나" };
+    private static readonly string[] MemberNames = { "김대열", "윤지연", "이장원", "최하나" };
 
     private static readonly string[][] MemberDescs =
     {
-        new string[] { "ENFP️", "게임", "지지말자!" },
         new string[] { "ENTP", "보디빌딩", "힘내자!" },
         new string[] { "INTP", "게임", "취업하자!" },
+        new string[] { "ENFP️", "게임", "지지말자!" },
         new string[] { "INFJ️", "낮잠자기", "운전하기" },
     };
 
@@ -88,7 +88,9 @@ public class CardManager : MonoBehaviour
             listOfIndex.Add(i);
         }
 
-        _indices = listOfIndex.OrderBy(_ => Random.Range(-1f, 1f)).ToArray();
+        //todo 디버깅 완료 후 셔플 적용 
+        _indices = listOfIndex.ToArray();
+        // _indices = listOfIndex.OrderBy(_ => Random.Range(-1f, 1f)).ToArray();
 
         for (var i = 0; i < 16; i++)
         {
@@ -99,7 +101,7 @@ public class CardManager : MonoBehaviour
             var cardGameObj = Instantiate(card, position, Quaternion.identity);
             cardGameObj.transform.localScale = new Vector3(100f, 100f, 0f);
             Debug.Log($"resource is {_resources[_indices[i]]}");
-            
+
             //resource 
             cardGameObj.transform.Find(Card.FRONT).GetComponent<SpriteRenderer>().sprite = _resources[_indices[i]];
             var cardData = cardGameObj.GetComponent<Card>();
@@ -160,12 +162,17 @@ public class CardManager : MonoBehaviour
             switch (result)
             {
                 case 0: // intentionally skip
-                case 1:
                     Debug.Log("matchSuccess");
                     _firstCard.Fadeout();
                     _secondCard.Fadeout();
                     Invoke(MethodDestroyCards, 0.5f);
+                    break;
+                case 1:
                     Debug.Log("그림 맞음");
+                    Debug.Log($"첫번째 카드 :{_firstCard.imgType},{_firstCard.member}");
+                    Debug.Log($"두번째 카드 :{_secondCard.imgType},{_secondCard.member}");
+                    Debug.Log($"멤버 카드 :{_memberCard},{_memberCard.member}");
+                    Invoke(MethodCloseCards, 0.5f);
                     break;
                 case 2:
                     Debug.Log("멤버와 다름");
@@ -198,6 +205,7 @@ public class CardManager : MonoBehaviour
         Destroy(_secondCard.gameObject);
         _firstCard = null;
         _secondCard = null;
+        _memberCard.Progress();
         _memberCard.SetBorderInactive();
         _memberCard = null;
         _isAnimationStarted = false;
@@ -211,5 +219,17 @@ public class CardManager : MonoBehaviour
     public bool IsMemberCardSelected()
     {
         return _memberCard != null;
+    }
+
+    public string GetDescription(string member, int index)
+    {
+        var memberIndex = 0;
+        foreach (var memberName in MemberNames)
+        {
+            if (memberName == member) break;
+            memberIndex++;
+        }
+
+        return MemberDescs[memberIndex][index];
     }
 }
