@@ -8,14 +8,15 @@ using Random = UnityEngine.Random;
 
 public class CardManager : MonoBehaviour
 {
+    private Camera _cam;
     public static CardManager Instance;
 
     public GameObject card;
     public static int MaxProgress = 2;
 
-    private const float Interval = 1.4f;
-    private const float StartPositionX = -2;
-    private const float StartPositionY = -4f;
+    private const float Interval = 0.1f;
+    private static float StartPositionX = -2;
+    private static float StartPositionY = -4f;
     private const string MethodCloseCards = "CloseCards";
     private const string MethodDestroyCards = "DestroyCards";
 
@@ -44,6 +45,8 @@ public class CardManager : MonoBehaviour
 
     private void Awake()
     {
+        _cam = Camera.main;
+
         if (Instance != null && Instance != this)
         {
             Destroy(this);
@@ -56,7 +59,27 @@ public class CardManager : MonoBehaviour
 
     void Start()
     {
+        CalcStartPosition();
         InitCard();
+    }
+
+
+    private void CalcStartPosition()
+    {
+        var endOfWorldPoint = _cam.ViewportToWorldPoint(new Vector3(1f, 1f, 0f));
+        /*
+         *todo
+         * 1. worldPoint 를 이용해서 패딩을 계산한다. v
+         * 2. StartPositionX 를 다시 할당한다. v 
+         * 3. 간격을 0.1f 로 바꿨으니 다시 계산할 수 있도록 for-loop 를 변경한다. v
+         */
+        var width = endOfWorldPoint.x * 2;
+        var cardLocalScale = card.transform.localScale;
+        var paddingXValue =
+            (width - (cardLocalScale.x * MemberNames.Length) - (Interval * (MemberNames.Length - 1))) / 2f;
+
+
+        StartPositionX = endOfWorldPoint.x * -1 + paddingXValue + (cardLocalScale.x / 2f);
     }
 
     private void InitCard()
@@ -70,7 +93,11 @@ public class CardManager : MonoBehaviour
         {
             for (var i = 0; i < MemberNames.Length; i++)
             {
-                var position = new Vector3(StartPositionX + i * Interval, 2f, 0f);
+                var position = new Vector3(
+                    x: StartPositionX + Interval * i + card.transform.localScale.x * i,
+                    y: 2f,
+                    z: 0f
+                );
                 var descCard = Instantiate(card, position, Quaternion.identity);
                 var descCardBehavior = descCard.GetComponent<Card>();
                 //desc
@@ -102,7 +129,12 @@ public class CardManager : MonoBehaviour
             var col = i % 4;
             var row = i / 4;
 
-            var position = new Vector3(StartPositionX + col * Interval, StartPositionY + row * Interval, 0f);
+            var localScale = card.transform.localScale;
+            var position = new Vector3(
+                x: StartPositionX + col * localScale.x + (Interval * col),
+                y: StartPositionY + row * localScale.y + (Interval * row),
+                z: 0f
+            );
             var cardGameObj = Instantiate(card, position, Quaternion.identity);
             cardGameObj.transform.localScale = new Vector3(100f, 100f, 0f);
             Debug.Log($"resource is {_resources[_indices[i]]}");
