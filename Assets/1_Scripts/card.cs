@@ -135,7 +135,8 @@ public class Card : MonoBehaviour
 
         var back = transform.Find(BACK).gameObject;
         var backRenderer = back.GetComponent<SpriteRenderer>();
-        backRenderer.color = Color.gray.WithAlpha(alpha: 0.8f);
+        //backRenderer.color = Color.gray.WithAlpha(alpha: 0.8f);
+        backRenderer.color = new Color(r: Color.gray.r, g: Color.gray.g, b: Color.gray.b, a: 0.8f);
         back.SetActive(!isOpen);
 
         //border
