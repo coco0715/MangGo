@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Unity.VisualScripting;
@@ -26,8 +27,9 @@ public class Card : MonoBehaviour
     private static string BORDER = "Border";
 
     private int progress;
-
     private bool isOpen;
+    private List<string> _addedDescs = new();
+
     internal CardType cardType { get; private set; } = CardType.Image;
 
     public string member = "";
@@ -61,12 +63,9 @@ public class Card : MonoBehaviour
     public void SetDescriptions(string[] descs)
     {
         progressBox.SetActive(true);
-
-        string text = member + "\n";
-        text += $"{descs[0]}\n";
-
-        desc.text = text;
-        Debug.Log($"text:{text}", border);
+        _addedDescs.Add(member);
+        _addedDescs.Add(descs.First());
+        UpdateDescriptionText();
     }
 
     public void SetBorderInactive()
@@ -84,7 +83,7 @@ public class Card : MonoBehaviour
 
         if (!CardManager.Instance.IsMemberCardSelected() && cardType != CardType.Desc)
         {
-            //todo 멤버 카드를 먼저 선택 할 수 있도록 안내 
+            CardManager.Instance.NoticeSelectMemberCardFirstly();
             return;
         }
 
@@ -160,14 +159,40 @@ public class Card : MonoBehaviour
         progress++;
         var progressFloat = progress / (float)CardManager.MaxProgress;
         Debug.Log($"progress = {progressFloat}");
-        desc.text += $"{CardManager.Instance.GetDescription(member, progress)}\n";
-        
+
+        if (_addedDescs.Count < 4)
+        {
+            var index = progress;
+            _addedDescs.Add(CardManager.Instance.GetDescription(member, index));
+            UpdateDescriptionText();
+        }
+
+
         //UI update
-        progressBox.transform.localScale = new Vector3(1f, progressFloat);
-        if (progress == CardManager.MaxProgress)
+        progressBox.transform.localScale = new Vector3(1f, progressFloat >= 1f ? 1f : progressFloat);
+
+        if (progress >= CardManager.MaxProgress)
         {
             //임시방편 
-            progressBox.transform.localPosition = new Vector3(0f,0f,0f);
+            progressBox.transform.localPosition = new Vector3(0f, 0f, 0f);
         }
+    }
+
+    private void UpdateDescriptionText()
+    {
+        desc.text = _addedDescs.Take(4).Aggregate((s, s1) => s + "\n" + s1);
+    }
+
+    public void AnimateScaleUp()
+    {
+        //todo animation 한번 키고 끄기...
+        Debug.Log("animateScaleUp");
+        anim.SetBool("isScaleUp", true);
+        Invoke("AnimateScaleDown",0.2f);
+    }
+
+    private void AnimateScaleDown()
+    {
+        anim.SetBool("isScaleUp", false);
     }
 }
