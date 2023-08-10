@@ -46,7 +46,7 @@ public class Managers : MonoBehaviour
 
             DontDestroyOnLoad(go);
 
-            //s_userManager.Init();
+            s_userManager.InitUserHighestScore();
             s_resourceManager.Init();
             s_soundManager.Init();
 

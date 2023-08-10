@@ -36,7 +36,7 @@ public class MatchManager
         }
         else
         {
-            if(card1.member == card2.member)
+            if(card1.member == card2.member || card1.member == card3.member)
                 return 2;
             else
                 return 3;

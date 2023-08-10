@@ -31,15 +31,20 @@ public class UI_Lobby : UI_Scene
         BindText(typeof(Texts));
         
         GetButton((int)Buttons.StartButton).gameObject.BindEvent(() => Managers.Scene.ChangeScene(Define.Scene.MainScene));
-        GetButton((int)Buttons.EndButton).gameObject.BindEvent(() => {
-            Managers.Match.highestScore = 300;
-            Managers.Match.score = 400;
-            Managers.UI.ShowPopupUI<UI_Result>();
-        });
-        
-        GetText((int)Texts.FirstScoreText).text = "120";
-        GetText((int)Texts.SecondScoreText).text = "100";
-        GetText((int)Texts.ThirdScoreText).text = "90";
+        GetButton((int)Buttons.EndButton).gameObject.BindEvent(() => Application.Quit());
+
+        if(PlayerPrefs.HasKey("firstScore"))
+        {
+            GetText((int)Texts.FirstScoreText).text = PlayerPrefs.GetInt("firstScore").ToString();           
+        }
+        if (PlayerPrefs.HasKey("secondScore"))
+        {
+            GetText((int)Texts.SecondScoreText).text = PlayerPrefs.GetInt("secondScore").ToString();
+        }
+        if (PlayerPrefs.HasKey("thirdScore"))
+        {
+            GetText((int)Texts.ThirdScoreText).text = PlayerPrefs.GetInt("thirdScore").ToString();
+        }
 
         // Sound
         Managers.Sound.Clear();
