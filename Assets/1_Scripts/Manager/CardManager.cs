@@ -94,8 +94,8 @@ public class CardManager : MonoBehaviour
             }
         }
 
-        // _indices = listOfIndex.OrderBy(_ => Random.Range(-1f, 1f)).ToArray();
-        _indices = listOfIndex.ToArray();
+        _indices = listOfIndex.OrderBy(_ => Random.Range(-1f, 1f)).ToArray();
+        // _indices = listOfIndex.ToArray();
 
         for (var i = 0; i < 16; i++)
         {
