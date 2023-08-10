@@ -26,10 +26,10 @@ public class CardManager : MonoBehaviour
 
     private static readonly string[][] MemberDescs =
     {
-        new string[] { "ENTP", "보디빌딩", "힘내자!" },
-        new string[] { "INTP", "게임", "취업하자!" },
-        new string[] { "ENFP️", "게임", "지지말자!" },
-        new string[] { "INFJ️", "낮잠자기", "운전하기" },
+        new string[] { "ENTP", "보디빌딩", "힘내자!", "게임", "독서", "낮잠자기", "코인", "주식" },
+        new string[] { "INTP", "게임", "취업하자!", "코인", "스포츠토토", "카지노", "주식", "돈이좋아" },
+        new string[] { "ENFP️", "게임", "지지말자!", "코인", "스포츠토토", "카지노", "주식", "돈이좋아" },
+        new string[] { "INFJ️", "낮잠자기", "운전하기", "코인", "스포츠토토", "카지노", "주식", "돈이좋아" },
     };
 
     private string _selectedMember;
@@ -86,6 +86,7 @@ public class CardManager : MonoBehaviour
         for (var i = 0; i < _resources.Length; i++)
         {
             //카드는 2장이므로 2번 더함
+            //카드수가 변경되는 경우에 사용할 수 있도록 규칙적용  
             var repeat = _cardCount / _resources.Length;
             for (var j = 0; j < repeat; j++)
             {
@@ -93,7 +94,8 @@ public class CardManager : MonoBehaviour
             }
         }
 
-        _indices = listOfIndex.OrderBy(_ => Random.Range(-1f, 1f)).ToArray();
+        // _indices = listOfIndex.OrderBy(_ => Random.Range(-1f, 1f)).ToArray();
+        _indices = listOfIndex.ToArray();
 
         for (var i = 0; i < 16; i++)
         {
@@ -231,6 +233,8 @@ public class CardManager : MonoBehaviour
 
         if (_cardCount == 0)
         {
+            _isFirstlyInitCard = false;
+            _memberCards.ForEach(member => member.InitProgress());
             InitCard();
         }
     }
@@ -247,14 +251,9 @@ public class CardManager : MonoBehaviour
 
     public string GetDescription(string member, int index)
     {
-        var memberIndex = 0;
-        foreach (var memberName in MemberNames)
-        {
-            if (memberName == member) break;
-            memberIndex++;
-        }
-
-        return MemberDescs[memberIndex][index];
+        var memberIndex = MemberNames.TakeWhile(memberName => memberName != member).Count();
+        var descriptions = MemberDescs[memberIndex];
+        return descriptions[index % descriptions.Length];
     }
 
     public void NoticeSelectMemberCardFirstly()

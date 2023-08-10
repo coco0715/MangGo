@@ -63,7 +63,6 @@ public class Card : MonoBehaviour
     public void SetDescriptions(string[] descs)
     {
         progressBox.SetActive(true);
-        _addedDescs.Add(member);
         _addedDescs.Add(descs.First());
         UpdateDescriptionText();
     }
@@ -149,6 +148,20 @@ public class Card : MonoBehaviour
         anim.SetBool("isDestroyed", true);
     }
 
+    public void InitProgress()
+    {
+        if (cardType != CardType.Desc)
+        {
+            throw new InvalidDataException("진행도 호출은 오로지 설명 카드에서만 호출.");
+        }
+
+        progress = 0;
+
+        //update ui
+        progressBox.transform.localPosition = new Vector3(0f, -0.25f, 0f); //임시방편 
+        progressBox.transform.localScale = new Vector3(1f, 0f, 0f);
+    }
+
     public void Progress()
     {
         if (cardType != CardType.Desc)
@@ -160,13 +173,10 @@ public class Card : MonoBehaviour
         var progressFloat = progress / (float)CardManager.MaxProgress;
         Debug.Log($"progress = {progressFloat}");
 
-        if (_addedDescs.Count < 4)
-        {
-            var index = progress;
-            _addedDescs.Add(CardManager.Instance.GetDescription(member, index));
-            UpdateDescriptionText();
-        }
-
+        //설명문 추가 
+        var index = _addedDescs.Count;
+        _addedDescs.Add(CardManager.Instance.GetDescription(member, index));
+        UpdateDescriptionText();
 
         //UI update
         progressBox.transform.localScale = new Vector3(1f, progressFloat >= 1f ? 1f : progressFloat);
@@ -180,7 +190,9 @@ public class Card : MonoBehaviour
 
     private void UpdateDescriptionText()
     {
-        desc.text = _addedDescs.Take(4).Aggregate((s, s1) => s + "\n" + s1);
+        desc.text = member +"\n"+ _addedDescs
+            .TakeLast(3)
+            .Aggregate((s, s1) => s + "\n" + s1);
     }
 
     public void AnimateScaleUp()
@@ -188,7 +200,7 @@ public class Card : MonoBehaviour
         //todo animation 한번 키고 끄기...
         Debug.Log("animateScaleUp");
         anim.SetBool("isScaleUp", true);
-        Invoke("AnimateScaleDown",0.2f);
+        Invoke("AnimateScaleDown", 0.2f);
     }
 
     private void AnimateScaleDown()
