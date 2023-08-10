@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UI_Lobby : UI_Scene
 {
@@ -33,17 +34,21 @@ public class UI_Lobby : UI_Scene
         GetButton((int)Buttons.StartButton).gameObject.BindEvent(() => Managers.Scene.ChangeScene(Define.Scene.MainScene));
         GetButton((int)Buttons.EndButton).gameObject.BindEvent(() => Application.Quit());
 
-        if(PlayerPrefs.HasKey("firstScore"))
+        List<TextMeshProUGUI> scoreTxts = new List<TextMeshProUGUI>();
+        scoreTxts.Add(GetText((int)Texts.FirstScoreText));
+        scoreTxts.Add(GetText((int)Texts.SecondScoreText));
+        scoreTxts.Add(GetText((int)Texts.ThirdScoreText));
+
+        /*string[] scores = PlayerPrefs.GetString("scores","0,0,0").Split(',');
+
+        for(int i = 0; i < scores.Length; i++)
         {
-            GetText((int)Texts.FirstScoreText).text = PlayerPrefs.GetInt("firstScore").ToString();           
-        }
-        if (PlayerPrefs.HasKey("secondScore"))
+            Debug.Log(scores[i]);
+            scoreTxts[i].text = scores[i];
+        } */
+        for(int i=0; i <3; i++)       
         {
-            GetText((int)Texts.SecondScoreText).text = PlayerPrefs.GetInt("secondScore").ToString();
-        }
-        if (PlayerPrefs.HasKey("thirdScore"))
-        {
-            GetText((int)Texts.ThirdScoreText).text = PlayerPrefs.GetInt("thirdScore").ToString();
+            scoreTxts[i].text = Managers.User.record[i].ToString();
         }
 
         // Sound

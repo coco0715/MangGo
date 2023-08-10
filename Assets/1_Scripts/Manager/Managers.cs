@@ -32,6 +32,7 @@ public class Managers : MonoBehaviour
     private void Start()
     {
         Init();
+        //PlayerPrefs.DeleteAll();
     }
 
     private static void Init()
@@ -46,7 +47,7 @@ public class Managers : MonoBehaviour
 
             DontDestroyOnLoad(go);
 
-            s_userManager.InitUserHighestScore();
+            s_userManager.InitScores();
             s_resourceManager.Init();
             s_soundManager.Init();
 

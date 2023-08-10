@@ -64,25 +64,25 @@ public class UI_Result : UI_Popup
         if(highestScore <= score)
         {
             highestScore = score;
-            Managers.User.SetScores();
             isHighest = true;
         }
-        Managers.User.UpdateRecord();
+        Managers.User.AddRecord();
+        Managers.User.SaveScores();
         GetText((int)Texts.FirstScoreText).text = highestScore.ToString();
         GetText((int)Texts.ScoreText).text = score.ToString();
-        CoroutineHelper.StartCoroutine(ShowMango());
+        if(isHighest)
+        {
+            CoroutineHelper.StartCoroutine(ShowMango());
+        }
     }
 
     IEnumerator ShowMango()
     {
-        Debug.Log("call showMango");
+        GetButton((int)Buttons.RetryButton).gameObject.SetActive(false);
+        GetButton((int)Buttons.QuitButton).gameObject.SetActive(false);
         yield return new WaitForSecondsRealtime(2.0f);
-        Debug.Log("After 2Seconds");
-
-        if (isHighest)
-        {
-            Debug.Log("Mango");
-            SetRewardObjects(true);
-        }
+        SetRewardObjects(true);
+        GetButton((int)Buttons.RetryButton).gameObject.SetActive(true);
+        GetButton((int)Buttons.QuitButton).gameObject.SetActive(true);
     }
 }

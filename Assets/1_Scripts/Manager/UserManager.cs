@@ -6,18 +6,20 @@ using UnityEngine;
 public class UserManager
 {
     public int highestScore = 0;
-    public int secondScore = 0;
-    public int thirdScore = 0;
     public int score = 0;
     public List<int> record = new List<int>();
     public bool isContinuous = false;
 
-    public void InitUserHighestScore()
+    public void InitScores()
     {
-        if(PlayerPrefs.HasKey("highestScore"))
+        string[] scores = PlayerPrefs.GetString("scores", "0,0,0").Split(',');
+        for(int i = 0; i < scores.Length; i++)
         {
-            highestScore = PlayerPrefs.GetInt("highestScore");
+            int tmp;
+            Int32.TryParse(scores[i], out tmp);
+            record.Add(tmp);
         }
+        highestScore = int.Parse(scores[0]);
     }
 
     public void LoseScore(int losing)
@@ -39,43 +41,37 @@ public class UserManager
         }
     }
 
-    public void SetScores()
-    {
-        if (highestScore <= score)
-        {
-            highestScore = score;
-        }
-        else if(secondScore <= score)
-        {
-            secondScore = score;
-        }
-        else if(thirdScore <= score)
-        {
-            thirdScore = score;
-        }
-
-        SaveScores();
-    }
-
-    public void UpdateRecord()
+    public void AddRecord()
     {
         if (!record.Contains(highestScore))
         {
             record.Add(highestScore);
-            record.Sort();
         }
 
         if (!record.Contains(score))
         {
             record.Add(score);
-            record.Sort();
-        }        
+        }
+        record.Sort(new Comparison<int>((n1, n2) => n2.CompareTo(n1)));
     }
 
     public void SaveScores()
     {
-        PlayerPrefs.SetInt("firstScore", highestScore);
-        PlayerPrefs.SetInt("secondScore", secondScore);
-        PlayerPrefs.SetInt("thirdScore", thirdScore);
+        string scores = "";
+    
+        for (int i = 0; i < 3; i++)
+        {
+            if(record[i] == null)
+            {
+                scores += "0,";
+            }
+            else
+            {
+                scores += record[i].ToString() + ",";
+            }
+            
+        }
+        
+        PlayerPrefs.SetString("scores", scores);
     }
 }
